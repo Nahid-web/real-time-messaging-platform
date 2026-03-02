@@ -1,4 +1,4 @@
-name: whatsapp_clone
+name: real_time_messaging_platform
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -50,7 +50,7 @@ dependencies:
   giphy_get: ^3.6.0
   http: ^1.2.2
   image_picker: ^1.1.2
-  intl: ^0.19.0
+  intl: ^0.20.2
   path_provider: ^2.1.5
   permission_handler: ^11.3.1
   story_view: ^0.16.5

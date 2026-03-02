@@ -1,6 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
-import 'package:whatsapp_clone/common/enums/message_enum.dart';
+import 'package:real_time_messaging_platform/common/enums/message_enum.dart';
 
 class Message {
   final String senderId;

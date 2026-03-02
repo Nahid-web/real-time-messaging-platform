@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:whatsapp_clone/common/utils/colors.dart';
+import 'package:real_time_messaging_platform/common/utils/colors.dart';
 
 class ChatAppBar extends StatelessWidget {
   const ChatAppBar({Key? key}) : super(key: key);

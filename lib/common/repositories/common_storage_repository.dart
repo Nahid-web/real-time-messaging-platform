@@ -6,7 +6,7 @@ import 'package:cloudinary_url_gen/cloudinary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
-import 'package:whatsapp_clone/common/config/app_config.dart';
+import 'package:real_time_messaging_platform/common/config/app_config.dart';
 
 final commonCloudinryStorageRepository = Provider(
   (ref) => CommonCloudinryStorageRepository(

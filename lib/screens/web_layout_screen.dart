@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:whatsapp_clone/common/utils/colors.dart';
-import 'package:whatsapp_clone/features/chat/widgets/chat_list.dart';
-import 'package:whatsapp_clone/features/chat/widgets/contacts_list.dart';
-import 'package:whatsapp_clone/widgets/web_chat_appbar.dart';
-import 'package:whatsapp_clone/widgets/web_profile_bar.dart';
-import 'package:whatsapp_clone/widgets/web_search_bar.dart';
+import 'package:real_time_messaging_platform/common/utils/colors.dart';
+import 'package:real_time_messaging_platform/features/chat/widgets/chat_list.dart';
+import 'package:real_time_messaging_platform/features/chat/widgets/contacts_list.dart';
+import 'package:real_time_messaging_platform/widgets/web_chat_appbar.dart';
+import 'package:real_time_messaging_platform/widgets/web_profile_bar.dart';
+import 'package:real_time_messaging_platform/widgets/web_search_bar.dart';
 
 class WebLayoutScreen extends StatelessWidget {
   const WebLayoutScreen({super.key});

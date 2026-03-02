@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:whatsapp_clone/common/utils/colors.dart';
-import 'package:whatsapp_clone/common/widgets/loader.dart';
-import 'package:whatsapp_clone/features/auth/controller/auth_controller.dart';
-import 'package:whatsapp_clone/features/call/screen/call_pickup_screen.dart';
-import 'package:whatsapp_clone/features/chat/widgets/bottom_chat_field.dart';
-import 'package:whatsapp_clone/features/chat/widgets/chat_list.dart';
-import 'package:whatsapp_clone/models/user_model.dart';
+import 'package:real_time_messaging_platform/common/utils/colors.dart';
+import 'package:real_time_messaging_platform/common/widgets/loader.dart';
+import 'package:real_time_messaging_platform/features/auth/controller/auth_controller.dart';
+import 'package:real_time_messaging_platform/features/call/screen/call_pickup_screen.dart';
+import 'package:real_time_messaging_platform/features/chat/widgets/bottom_chat_field.dart';
+import 'package:real_time_messaging_platform/features/chat/widgets/chat_list.dart';
+import 'package:real_time_messaging_platform/models/user_model.dart';
 
 class MobileChatScreen extends ConsumerWidget {
   static const String routeName = '/mobile-chat-screen';

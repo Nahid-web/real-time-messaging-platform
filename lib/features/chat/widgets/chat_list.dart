@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:whatsapp_clone/common/enums/message_enum.dart';
-import 'package:whatsapp_clone/common/providers/message_reply_provider.dart';
-import 'package:whatsapp_clone/common/widgets/error.dart';
-import 'package:whatsapp_clone/common/widgets/loader.dart';
-import 'package:whatsapp_clone/features/chat/controller/chat_controller.dart';
-import 'package:whatsapp_clone/features/chat/widgets/my_message_card.dart';
-import 'package:whatsapp_clone/features/chat/widgets/sender_message_card.dart';
-import 'package:whatsapp_clone/models/message.dart';
+import 'package:real_time_messaging_platform/common/enums/message_enum.dart';
+import 'package:real_time_messaging_platform/common/providers/message_reply_provider.dart';
+import 'package:real_time_messaging_platform/common/widgets/error.dart';
+import 'package:real_time_messaging_platform/common/widgets/loader.dart';
+import 'package:real_time_messaging_platform/features/chat/controller/chat_controller.dart';
+import 'package:real_time_messaging_platform/features/chat/widgets/my_message_card.dart';
+import 'package:real_time_messaging_platform/features/chat/widgets/sender_message_card.dart';
+import 'package:real_time_messaging_platform/models/message.dart';
 
 class ChatList extends ConsumerStatefulWidget {
   final String receiverUserId;

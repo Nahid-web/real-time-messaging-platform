@@ -6,7 +6,7 @@ A **Full-Stack Chatting App** built with **Flutter**, **Firebase**, **Cloudinary
 
 ## 🔗 GitHub Repository
 
-[![GitHub Repo](https://img.shields.io/badge/GitHub-Repository-blue?style=for-the-badge)](https://github.com/Nahid-web/whatsapp_clone)
+[![GitHub Repo](https://img.shields.io/badge/GitHub-Repository-blue?style=for-the-badge)](https://github.com/Nahid-web/real_time_messaging_platform)
 
 ---
 
@@ -131,8 +131,8 @@ To get started with this project, follow the steps below:
 1.  Clone the repository:
 
     ```js
-    git clone https://github.com/Nahid-web/whatsapp_clone.git
-    cd whatsapp_clone
+    git clone https://github.com/Nahid-web/real_time_messaging_platform.git
+    cd real_time_messaging_platform
     ```
 
 2.  Set up Firebase:

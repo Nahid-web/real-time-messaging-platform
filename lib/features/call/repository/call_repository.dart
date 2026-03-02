@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:whatsapp_clone/common/utils/utils.dart';
-import 'package:whatsapp_clone/features/call/screen/call_screen.dart';
-import 'package:whatsapp_clone/models/call.dart';
+import 'package:real_time_messaging_platform/common/utils/utils.dart';
+import 'package:real_time_messaging_platform/features/call/screen/call_screen.dart';
+import 'package:real_time_messaging_platform/models/call.dart';
 
 final callRepositoryProvider = Provider(
   (ref) => CallRepository(

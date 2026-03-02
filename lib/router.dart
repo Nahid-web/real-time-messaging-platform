@@ -1,16 +1,16 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:whatsapp_clone/common/widgets/error.dart';
-import 'package:whatsapp_clone/features/auth/screens/login_screen.dart';
-import 'package:whatsapp_clone/features/auth/screens/otp_screen.dart';
-import 'package:whatsapp_clone/features/auth/screens/user_information_screen.dart';
-import 'package:whatsapp_clone/features/chat/screens/mobile.chat_screen.dart';
-import 'package:whatsapp_clone/features/group/screen/create_group_screen.dart';
-import 'package:whatsapp_clone/features/select_contacts/screens/select_contacts_screen.dart';
-import 'package:whatsapp_clone/features/status/screens/confirm_status_screen.dart';
-import 'package:whatsapp_clone/features/status/screens/status_screen.dart';
-import 'package:whatsapp_clone/models/status_model.dart';
+import 'package:real_time_messaging_platform/common/widgets/error.dart';
+import 'package:real_time_messaging_platform/features/auth/screens/login_screen.dart';
+import 'package:real_time_messaging_platform/features/auth/screens/otp_screen.dart';
+import 'package:real_time_messaging_platform/features/auth/screens/user_information_screen.dart';
+import 'package:real_time_messaging_platform/features/chat/screens/mobile.chat_screen.dart';
+import 'package:real_time_messaging_platform/features/group/screen/create_group_screen.dart';
+import 'package:real_time_messaging_platform/features/select_contacts/screens/select_contacts_screen.dart';
+import 'package:real_time_messaging_platform/features/status/screens/confirm_status_screen.dart';
+import 'package:real_time_messaging_platform/features/status/screens/status_screen.dart';
+import 'package:real_time_messaging_platform/models/status_model.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {

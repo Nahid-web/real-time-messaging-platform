@@ -3,9 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
-import 'package:whatsapp_clone/features/auth/controller/auth_controller.dart';
-import 'package:whatsapp_clone/features/call/repository/call_repository.dart';
-import 'package:whatsapp_clone/models/call.dart';
+import 'package:real_time_messaging_platform/features/auth/controller/auth_controller.dart';
+import 'package:real_time_messaging_platform/features/call/repository/call_repository.dart';
+import 'package:real_time_messaging_platform/models/call.dart';
 
 final callControllerProvider = Provider((ref) {
   final callRepository = ref.read(callRepositoryProvider);

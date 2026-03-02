@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:whatsapp_clone/features/call/controller/call_controller.dart';
-import 'package:whatsapp_clone/models/call.dart';
+import 'package:real_time_messaging_platform/features/call/controller/call_controller.dart';
+import 'package:real_time_messaging_platform/models/call.dart';
 
 class CallPickupScreen extends ConsumerWidget {
   final Widget scaffold;

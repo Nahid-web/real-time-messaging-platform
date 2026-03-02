@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:whatsapp_clone/features/auth/controller/auth_controller.dart';
-import 'package:whatsapp_clone/features/status/repository/status_repository.dart';
-import 'package:whatsapp_clone/models/status_model.dart';
+import 'package:real_time_messaging_platform/features/auth/controller/auth_controller.dart';
+import 'package:real_time_messaging_platform/features/status/repository/status_repository.dart';
+import 'package:real_time_messaging_platform/models/status_model.dart';
 
 final statusControllerProvider = Provider((ref){
   final statusRepository = ref.read(statusRepositoryProvider);

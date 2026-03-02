@@ -2,14 +2,14 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:whatsapp_clone/common/utils/colors.dart';
-import 'package:whatsapp_clone/common/utils/utils.dart';
-import 'package:whatsapp_clone/features/auth/controller/auth_controller.dart';
-import 'package:whatsapp_clone/features/chat/widgets/contacts_list.dart';
-import 'package:whatsapp_clone/features/group/screen/create_group_screen.dart';
-import 'package:whatsapp_clone/features/select_contacts/screens/select_contacts_screen.dart';
-import 'package:whatsapp_clone/features/status/screens/confirm_status_screen.dart';
-import 'package:whatsapp_clone/features/status/screens/status_contacts_screen.dart';
+import 'package:real_time_messaging_platform/common/utils/colors.dart';
+import 'package:real_time_messaging_platform/common/utils/utils.dart';
+import 'package:real_time_messaging_platform/features/auth/controller/auth_controller.dart';
+import 'package:real_time_messaging_platform/features/chat/widgets/contacts_list.dart';
+import 'package:real_time_messaging_platform/features/group/screen/create_group_screen.dart';
+import 'package:real_time_messaging_platform/features/select_contacts/screens/select_contacts_screen.dart';
+import 'package:real_time_messaging_platform/features/status/screens/confirm_status_screen.dart';
+import 'package:real_time_messaging_platform/features/status/screens/status_contacts_screen.dart';
 
 class MobileLayoutScreen extends ConsumerStatefulWidget {
   const MobileLayoutScreen({super.key});

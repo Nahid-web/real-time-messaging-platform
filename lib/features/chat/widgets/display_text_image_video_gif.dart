@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:whatsapp_clone/common/enums/message_enum.dart';
-import 'package:whatsapp_clone/features/chat/widgets/audio_player_item.dart';
-import 'package:whatsapp_clone/features/chat/widgets/video_player_item.dart';
+import 'package:real_time_messaging_platform/common/enums/message_enum.dart';
+import 'package:real_time_messaging_platform/features/chat/widgets/audio_player_item.dart';
+import 'package:real_time_messaging_platform/features/chat/widgets/video_player_item.dart';
 
 class DisplayTextImageGif extends StatelessWidget {
   final String message;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:whatsapp_clone/common/providers/message_reply_provider.dart';
-import 'package:whatsapp_clone/features/chat/widgets/display_text_image_video_gif.dart';
+import 'package:real_time_messaging_platform/common/providers/message_reply_provider.dart';
+import 'package:real_time_messaging_platform/features/chat/widgets/display_text_image_video_gif.dart';
 
 class MessageReplyPreview extends ConsumerWidget {
   const MessageReplyPreview({super.key});

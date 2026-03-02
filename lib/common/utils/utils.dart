@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:giphy_get/giphy_get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:whatsapp_clone/common/config/app_config.dart';
+import 'package:real_time_messaging_platform/common/config/app_config.dart';
 
 void showSnackBar({required BuildContext context, required String content}) {
   ScaffoldMessenger.of(context).showSnackBar(

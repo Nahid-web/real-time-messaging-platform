@@ -4,12 +4,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:whatsapp_clone/common/repositories/common_storage_repository.dart';
-import 'package:whatsapp_clone/common/utils/utils.dart';
-import 'package:whatsapp_clone/features/auth/screens/otp_screen.dart';
-import 'package:whatsapp_clone/features/auth/screens/user_information_screen.dart';
-import 'package:whatsapp_clone/models/user_model.dart';
-import 'package:whatsapp_clone/screens/mobile_layout_screen.dart';
+import 'package:real_time_messaging_platform/common/repositories/common_storage_repository.dart';
+import 'package:real_time_messaging_platform/common/utils/utils.dart';
+import 'package:real_time_messaging_platform/features/auth/screens/otp_screen.dart';
+import 'package:real_time_messaging_platform/features/auth/screens/user_information_screen.dart';
+import 'package:real_time_messaging_platform/models/user_model.dart';
+import 'package:real_time_messaging_platform/screens/mobile_layout_screen.dart';
 
 final authRepositoryProvider = Provider(
   (ref) => AuthRepository(

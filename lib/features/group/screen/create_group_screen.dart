@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:whatsapp_clone/common/utils/utils.dart';
-import 'package:whatsapp_clone/features/group/controller/group_controller.dart';
-import 'package:whatsapp_clone/features/group/widget/select_contacts_group.dart';
+import 'package:real_time_messaging_platform/common/utils/utils.dart';
+import 'package:real_time_messaging_platform/features/group/controller/group_controller.dart';
+import 'package:real_time_messaging_platform/features/group/widget/select_contacts_group.dart';
 
 class CreateGroupScreen extends ConsumerStatefulWidget {
   static const String routeName = '/create-group';

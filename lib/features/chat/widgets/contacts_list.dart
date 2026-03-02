@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:whatsapp_clone/common/utils/colors.dart';
-import 'package:whatsapp_clone/common/widgets/error.dart';
-import 'package:whatsapp_clone/common/widgets/loader.dart';
-import 'package:whatsapp_clone/features/chat/controller/chat_controller.dart';
-import 'package:whatsapp_clone/features/chat/screens/mobile.chat_screen.dart';
-import 'package:whatsapp_clone/models/chat_contact.dart';
-import 'package:whatsapp_clone/models/group_model.dart';
+import 'package:real_time_messaging_platform/common/utils/colors.dart';
+import 'package:real_time_messaging_platform/common/widgets/error.dart';
+import 'package:real_time_messaging_platform/common/widgets/loader.dart';
+import 'package:real_time_messaging_platform/features/chat/controller/chat_controller.dart';
+import 'package:real_time_messaging_platform/features/chat/screens/mobile.chat_screen.dart';
+import 'package:real_time_messaging_platform/models/chat_contact.dart';
+import 'package:real_time_messaging_platform/models/group_model.dart';
 
 class ContactsList extends ConsumerWidget {
   const ContactsList({super.key});
