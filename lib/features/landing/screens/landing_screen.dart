@@ -16,47 +16,81 @@ class LandingScreen extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(
-              height: 50,
-            ),
-            const Text(
-              "Welcome to WhatsApp",
-              style: TextStyle(
-                fontSize: 33,
-                fontWeight: FontWeight.w600,
+            const SizedBox(height: 50),
+            // Brand header
+            ShaderMask(
+              shaderCallback: (bounds) => const LinearGradient(
+                colors: [tabColor, accentColor],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ).createShader(bounds),
+              child: const Text(
+                'RTMP',
+                style: TextStyle(
+                  fontSize: 42,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  letterSpacing: 4,
+                ),
               ),
             ),
-            SizedBox(
-              height: size.height / 9,
+            const SizedBox(height: 6),
+            const Text(
+              'Real-Time Messaging Platform',
+              style: TextStyle(
+                fontSize: 14,
+                color: greyColor,
+                letterSpacing: 1.2,
+              ),
             ),
-            Image.asset(
-              'assets/bg.png',
-              height: 340,
-              width: 340,
-              color: tabColor,
+            SizedBox(height: size.height / 11),
+            // Illustration with tinted overlay
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  width: 280,
+                  height: 280,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: RadialGradient(
+                      colors: [
+                        tabColor.withValues(alpha: 0.15),
+                        Colors.transparent,
+                      ],
+                    ),
+                  ),
+                ),
+                Image.asset(
+                  'assets/bg.png',
+                  height: 220,
+                  width: 220,
+                  color: tabColor,
+                  colorBlendMode: BlendMode.srcIn,
+                ),
+              ],
             ),
-            SizedBox(
-              height: size.height / 9,
-            ),
+            SizedBox(height: size.height / 11),
             const Padding(
-              padding: EdgeInsets.all(15),
+              padding: EdgeInsets.symmetric(horizontal: 32),
               child: Text(
-                "Read our Privacy Policy. Tap 'Agreed and Continue' to Accept the Terms of Service.",
+                'By continuing, you agree to our Terms of Service and Privacy Policy.',
                 style: TextStyle(
                   color: greyColor,
+                  fontSize: 13,
                 ),
                 textAlign: TextAlign.center,
               ),
             ),
-            const SizedBox(
-              height: 10,
-            ),
+            const SizedBox(height: 20),
             SizedBox(
               width: size.width * 0.75,
               child: CustomButton(
-                  text: "AGREE AND CONTINUE",
-                  onPressed: () => navigateToLoginScreen(context)),
+                text: 'GET STARTED',
+                onPressed: () => navigateToLoginScreen(context),
+              ),
             ),
           ],
         ),

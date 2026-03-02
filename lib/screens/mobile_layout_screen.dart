@@ -60,23 +60,61 @@ class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen>
           elevation: 0,
           backgroundColor: appBarColor,
           centerTitle: false,
-          title: const Text(
-            'WhatsApp',
-            style: TextStyle(
-              fontSize: 20,
-              color: Colors.grey,
-              fontWeight: FontWeight.bold,
-            ),
+          title: Row(
+            children: [
+              Container(
+                width: 34,
+                height: 34,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [tabColor, accentColor],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Icon(
+                  Icons.bolt_rounded,
+                  color: Colors.white,
+                  size: 20,
+                ),
+              ),
+              const SizedBox(width: 10),
+              ShaderMask(
+                shaderCallback: (bounds) => const LinearGradient(
+                  colors: [tabColor, accentColor],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ).createShader(bounds),
+                child: const Text(
+                  'RTMP',
+                  style: TextStyle(
+                    fontSize: 22,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.5,
+                  ),
+                ),
+              ),
+            ],
           ),
           actions: [
             IconButton(
-              icon: const Icon(Icons.search, color: Colors.grey),
+              icon: const Icon(Icons.search_rounded, color: Colors.grey),
               onPressed: () {},
             ),
             PopupMenuButton(
+              icon: const Icon(Icons.more_vert, color: Colors.grey),
+              color: appBarColor,
               itemBuilder: (context) => [
                 PopupMenuItem(
-                  child: Text('Create Group'),
+                  child: const Row(
+                    children: [
+                      Icon(Icons.group_add_outlined, color: tabColor, size: 20),
+                      SizedBox(width: 10),
+                      Text('New Group'),
+                    ],
+                  ),
                   onTap: () => Navigator.pushNamed(
                     context,
                     CreateGroupScreen.routeName,
@@ -88,22 +126,19 @@ class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen>
           bottom: TabBar(
             controller: tabBarController,
             indicatorColor: tabColor,
-            indicatorWeight: 4,
+            indicatorWeight: 3,
+            indicatorSize: TabBarIndicatorSize.tab,
             labelColor: tabColor,
             unselectedLabelColor: Colors.grey,
             labelStyle: const TextStyle(
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w600,
+              fontSize: 13,
+              letterSpacing: 0.5,
             ),
             tabs: const [
-              Tab(
-                text: 'CHATS',
-              ),
-              Tab(
-                text: 'STATUS',
-              ),
-              Tab(
-                text: 'CALLS',
-              ),
+              Tab(text: 'Messages'),
+              Tab(text: 'Stories'),
+              Tab(text: 'Calls'),
             ],
           ),
         ),
@@ -131,8 +166,9 @@ class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen>
             }
           },
           backgroundColor: tabColor,
+          elevation: 4,
           child: const Icon(
-            Icons.comment,
+            Icons.edit_rounded,
             color: Colors.white,
           ),
         ),

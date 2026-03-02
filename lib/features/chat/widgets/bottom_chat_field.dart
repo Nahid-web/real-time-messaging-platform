@@ -227,7 +227,7 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
                         ),
                         IconButton(
                           onPressed: selectVideo,
-                          icon:const Icon(
+                          icon: const Icon(
                             Icons.attach_file,
                             color: Colors.grey,
                           ),
@@ -235,7 +235,7 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
                       ],
                     ),
                   ),
-                  hintText: 'Type a message!',
+                  hintText: 'Message...',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20.0),
                     borderSide: const BorderSide(
@@ -254,14 +254,15 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
                 left: 2,
               ),
               child: CircleAvatar(
+                backgroundColor: tabColor,
                 child: GestureDetector(
                   onTap: sendTextMessage,
                   child: Icon(
                     isShowSendButton
-                        ? Icons.send
+                        ? Icons.send_rounded
                         : isRecording
-                            ? Icons.close
-                            : Icons.mic,
+                            ? Icons.stop_circle_outlined
+                            : Icons.mic_rounded,
                     color: Colors.white,
                   ),
                 ),

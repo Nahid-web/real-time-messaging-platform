@@ -50,7 +50,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Enter your phone number'),
+        title: const Text('Verify your number'),
         elevation: 0,
         backgroundColor: backgroundColor,
       ),
@@ -60,36 +60,66 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Text('WhatsApp will need to verify your phone number'),
-              const SizedBox(
-                height: 10,
+              const SizedBox(height: 10),
+              const Text(
+                "We'll send a one-time code to verify your number",
+                textAlign: TextAlign.center,
+                style: TextStyle(color: greyColor, fontSize: 14),
               ),
-              TextButton(
-                onPressed: pickCountry,
-                child: const Text("Pick Country"),
-              ),
-              const SizedBox(
-                height: 5,
-              ),
-              Row(
-                children: [
-                  if (country != null) Text('+${country!.phoneCode}'),
-                  SizedBox(
-                    width: size.width * 0.7,
-                    child: TextField(
-                      controller: phoneController,
-                      decoration: const InputDecoration(
-                        hintText: 'phone number',
+              const SizedBox(height: 30),
+              // Country + phone input card
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                decoration: BoxDecoration(
+                  color: mobileChatBoxColor,
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: dividerColor),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextButton.icon(
+                      onPressed: pickCountry,
+                      icon: const Icon(Icons.flag_outlined,
+                          color: tabColor, size: 18),
+                      label: Text(
+                        country == null
+                            ? 'Select Country'
+                            : '${country!.name} (+${country!.phoneCode})',
+                        style: const TextStyle(color: tabColor),
                       ),
                     ),
-                  )
-                ],
+                    const Divider(color: dividerColor, height: 1),
+                    Row(
+                      children: [
+                        if (country != null)
+                          Padding(
+                            padding: const EdgeInsets.only(right: 8),
+                            child: Text(
+                              '+${country!.phoneCode}',
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        Expanded(
+                          child: TextField(
+                            controller: phoneController,
+                            keyboardType: TextInputType.phone,
+                            decoration: const InputDecoration(
+                              hintText: 'Phone number',
+                              border: InputBorder.none,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
+              SizedBox(height: size.height * 0.48),
               SizedBox(
-                height: size.height * 0.6,
-              ),
-              SizedBox(
-                width: 90,
+                width: 120,
                 child: CustomButton(text: 'NEXT', onPressed: sendPhoneNumber),
               ),
             ],
