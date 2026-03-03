@@ -45,7 +45,7 @@ class AuthRepository {
             await auth.signInWithCredential(credential);
           },
           verificationFailed: (e) {
-            throw Exception(e.message);
+            showSnackBar(context: context, content: e.message!);
           },
           codeSent: ((String verificationId, int? resendToken) async {
             Navigator.pushNamed(context, OtpScreen.routeName,
@@ -68,11 +68,22 @@ class AuthRepository {
         smsCode: userOTP,
       );
       await auth.signInWithCredential(credential);
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        UserInformationScreen.routeName,
-        (route) => false,
-      );
+
+      var user = await getCurrentUserData();
+
+      if (user != null) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const MobileLayoutScreen()),
+          (route) => false,
+        );
+      } else {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          UserInformationScreen.routeName,
+          (route) => false,
+        );
+      }
     } on FirebaseAuthException catch (e) {
       showSnackBar(context: context, content: e.message!);
     }

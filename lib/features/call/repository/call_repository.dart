@@ -22,7 +22,8 @@ class CallRepository {
     required this.auth,
   });
 
-  Stream<DocumentSnapshot> get callStream => firestore.collection('call').doc(auth.currentUser!.uid).snapshots();
+  Stream<DocumentSnapshot> get callStream =>
+      firestore.collection('call').doc(auth.currentUser!.uid).snapshots();
 
   void makeCall(
     Call senderCallData,
@@ -36,11 +37,14 @@ class CallRepository {
       await firestore.collection('call').doc(senderCallData.receiverId).set(
             receiverCallData.toMap(),
           );
-      MaterialPageRoute(
-        builder: (context) => CallScreen(
-          call: senderCallData,
-          channelId: senderCallData.callId,
-          isGroupChat: false,
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CallScreen(
+            call: senderCallData,
+            channelId: senderCallData.callId,
+            isGroupChat: false,
+          ),
         ),
       );
     } catch (e) {

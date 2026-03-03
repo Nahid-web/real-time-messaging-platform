@@ -34,17 +34,53 @@ class _StatusScreenState extends State<StatusScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return storyItems.isEmpty
-        ? const Loader()
-        : StoryView(
-            storyItems: storyItems,
-            controller: controller,
-            repeat: true,
-            onVerticalSwipeComplete: (p0) {
-              if (p0 == Direction.down) {
-                Navigator.pop(context);
-              }
-            },
-          );
+    return Scaffold(
+      body: storyItems.isEmpty
+          ? const Loader()
+          : Stack(
+              children: [
+                StoryView(
+                  storyItems: storyItems,
+                  controller: controller,
+                  repeat: false,
+                  onComplete: () {
+                    Navigator.pop(context);
+                  },
+                  onVerticalSwipeComplete: (p0) {
+                    if (p0 == Direction.down) {
+                      Navigator.pop(context);
+                    }
+                  },
+                ),
+                Positioned(
+                  top: 50,
+                  left: 10,
+                  right: 10,
+                  child: Row(
+                    children: [
+                      IconButton(
+                        onPressed: () => Navigator.pop(context),
+                        icon: const Icon(Icons.arrow_back),
+                        color: Colors.white,
+                      ),
+                      CircleAvatar(
+                        backgroundImage: NetworkImage(widget.status.profilePic),
+                        radius: 20,
+                      ),
+                      const SizedBox(width: 10),
+                      Text(
+                        widget.status.username,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+    );
   }
 }
