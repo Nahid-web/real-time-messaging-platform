@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,6 +11,7 @@ import 'package:real_time_messaging_platform/features/landing/screens/landing_sc
 import 'package:real_time_messaging_platform/firebase_options.dart';
 import 'package:real_time_messaging_platform/router.dart';
 import 'package:real_time_messaging_platform/screens/mobile_layout_screen.dart';
+import 'package:real_time_messaging_platform/screens/web_layout_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,13 +38,19 @@ class MyApp extends ConsumerWidget {
           color: appBarColor,
         ),
       ),
-      // home: const MobileLayoutScreen(),
       home: ref.watch(userDataAuthProvider).when(
           data: (user) {
             if (user == null) {
               return const LandingScreen();
             }
-            return const MobileLayoutScreen();
+            return LayoutBuilder(
+              builder: (context, constraints) {
+                if (kIsWeb || constraints.maxWidth >= 900) {
+                  return const WebLayoutScreen();
+                }
+                return const MobileLayoutScreen();
+              },
+            );
           },
           error: (err, trace) {
             return ErrorScreen(error: err.toString());

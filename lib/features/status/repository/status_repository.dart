@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -47,7 +48,7 @@ class StatusRepository {
             statusImage,
           );
       List<Contact> contacts = [];
-      if (await FlutterContacts.requestPermission()) {
+      if (!kIsWeb && await FlutterContacts.requestPermission()) {
         contacts = await FlutterContacts.getContacts(withProperties: true);
       }
 
@@ -125,41 +126,47 @@ class StatusRepository {
     List<Status> statusData = [];
 
     try {
-      List<Contact> contacts = [];
-      if (await FlutterContacts.requestPermission()) {
-        contacts = await FlutterContacts.getContacts(withProperties: true);
-      }
-
-      for (var i = 0; i < contacts.length; i++) {
-        var statusesSnapshot = await firestore
-            .collection('status')
-            .where(
-              'phoneNumber',
-              isEqualTo: contacts[i]
-                  .phones[0]
-                  .number
-                  .replaceAll(
-                    ' ',
-                    '',
-                  )
-                  .replaceAll(
-                    '-',
-                    '',
-                  ),
-            )
-            // .
-            // where(
-            //   'createdAt',
-            //   isGreaterThan: DateTime.now()
-            //       .subtract(const Duration(hours: 24))
-            //       .millisecondsSinceEpoch,
-            // )
-            .get();
-
-        for (var tempData in statusesSnapshot.docs) {
-          Status tempStatus = Status.fromMap(tempData.data());
+      if (kIsWeb) {
+        // On web, flutter_contacts is unavailable.
+        // Fall back: show all statuses where the current user is in whoCanSee.
+        var snapshot = await firestore.collection('status').get();
+        for (var doc in snapshot.docs) {
+          Status tempStatus = Status.fromMap(doc.data());
           if (tempStatus.whoCanSee.contains(auth.currentUser!.uid)) {
             statusData.add(tempStatus);
+          }
+        }
+      } else {
+        List<Contact> contacts = [];
+        if (await FlutterContacts.requestPermission()) {
+          contacts = await FlutterContacts.getContacts(withProperties: true);
+        }
+
+        for (var i = 0; i < contacts.length; i++) {
+          if (contacts[i].phones.isEmpty) continue;
+          var statusesSnapshot = await firestore
+              .collection('status')
+              .where(
+                'phoneNumber',
+                isEqualTo: contacts[i]
+                    .phones[0]
+                    .number
+                    .replaceAll(' ', '')
+                    .replaceAll('-', ''),
+              )
+              .where(
+                'createdAt',
+                isGreaterThan: DateTime.now()
+                    .subtract(const Duration(hours: 24))
+                    .millisecondsSinceEpoch,
+              )
+              .get();
+
+          for (var tempData in statusesSnapshot.docs) {
+            Status tempStatus = Status.fromMap(tempData.data());
+            if (tempStatus.whoCanSee.contains(auth.currentUser!.uid)) {
+              statusData.add(tempStatus);
+            }
           }
         }
       }
