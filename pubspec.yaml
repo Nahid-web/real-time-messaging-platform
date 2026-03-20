@@ -29,6 +29,7 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
 
+  agora_rtc_engine: ^6.3.2
   audioplayers: ^6.1.0
   cached_network_image: ^3.4.1
   cached_video_player_plus: ^3.0.3
