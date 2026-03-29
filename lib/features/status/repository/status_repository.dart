@@ -89,14 +89,24 @@ class StatusRepository {
 
       if (statusesSnapshot.docs.isNotEmpty) {
         Status status = Status.fromMap(statusesSnapshot.docs[0].data());
-        statusImageUrls = status.photoUrl;
-        statusImageUrls.add(imageUrl);
+        bool isOlderThan24h = status.createdAt.isBefore(
+          DateTime.now().subtract(const Duration(hours: 24)),
+        );
+
+        if (isOlderThan24h) {
+          // Status outdated, reset with new image
+          statusImageUrls = [imageUrl];
+        } else {
+          statusImageUrls = status.photoUrl;
+          statusImageUrls.add(imageUrl);
+        }
 
         await firestore
             .collection('status')
             .doc(statusesSnapshot.docs[0].id)
             .update({
           'photoUrl': statusImageUrls,
+          'createdAt': DateTime.now().millisecondsSinceEpoch,
         });
         return;
       } else {
@@ -129,7 +139,14 @@ class StatusRepository {
       if (kIsWeb) {
         // On web, flutter_contacts is unavailable.
         // Fall back: show all statuses where the current user is in whoCanSee.
-        var snapshot = await firestore.collection('status').get();
+        final twentyFourHoursAgo = DateTime.now()
+            .subtract(const Duration(hours: 24))
+            .millisecondsSinceEpoch;
+
+        var snapshot = await firestore
+            .collection('status')
+            .where('createdAt', isGreaterThan: twentyFourHoursAgo)
+            .get();
         for (var doc in snapshot.docs) {
           Status tempStatus = Status.fromMap(doc.data());
           if (tempStatus.whoCanSee.contains(auth.currentUser!.uid)) {
