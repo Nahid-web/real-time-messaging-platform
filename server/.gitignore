@@ -1,0 +1,3 @@
+# Server-side secrets — NEVER commit this to git!
+.env
+node_modules/
