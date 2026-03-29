@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:real_time_messaging_platform/common/utils/colors.dart';
 import 'package:real_time_messaging_platform/common/widgets/loader.dart';
 import 'package:real_time_messaging_platform/features/auth/controller/auth_controller.dart';
+import 'package:real_time_messaging_platform/features/call/controller/call_controller.dart';
 import 'package:real_time_messaging_platform/features/call/screen/call_pickup_screen.dart';
 import 'package:real_time_messaging_platform/features/chat/widgets/bottom_chat_field.dart';
 import 'package:real_time_messaging_platform/features/chat/widgets/chat_list.dart';
@@ -23,15 +24,16 @@ class MobileChatScreen extends ConsumerWidget {
     required this.profilePic,
   });
 
-  // void makeCall(WidgetRef ref, BuildContext context) {
-  //   ref.read(callControllerProvider).makeCall(
-  //         context,
-  //         name,
-  //         uid,
-  //         profilePic,
-  //         isGroupChat,
-  //       );
-  // }
+  void makeCall(WidgetRef ref, BuildContext context, bool hasVideo) {
+    ref.read(callControllerProvider).makeCall(
+          context,
+          name,
+          uid,
+          profilePic,
+          isGroupChat,
+          hasVideo,
+        );
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -58,11 +60,11 @@ class MobileChatScreen extends ConsumerWidget {
           centerTitle: false,
           actions: [
             IconButton(
-              onPressed: () {},
+              onPressed: () => makeCall(ref, context, true),
               icon: const Icon(Icons.video_call),
             ),
             IconButton(
-              onPressed: () {},
+              onPressed: () => makeCall(ref, context, false),
               icon: const Icon(Icons.call),
             ),
             IconButton(

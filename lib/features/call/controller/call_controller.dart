@@ -33,6 +33,7 @@ class CallController {
     String receiverUid,
     String receiverProfilePic,
     bool isGroupChat,
+    bool hasVideo,
   ) {
     ref.read(userDataAuthProvider).whenData(
       (value) {
@@ -46,6 +47,7 @@ class CallController {
           receiverPic: receiverProfilePic,
           callId: callId,
           hasDialed: true,
+          hasVideo: hasVideo,
         );
         Call receiverCallData = Call(
           callerId: auth.currentUser!.uid,
@@ -56,6 +58,7 @@ class CallController {
           receiverPic: receiverProfilePic,
           callId: callId,
           hasDialed: false,
+          hasVideo: hasVideo,
         );
 
         callRepository.makeCall(

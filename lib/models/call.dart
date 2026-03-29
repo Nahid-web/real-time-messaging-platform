@@ -9,6 +9,7 @@ class Call {
   final String receiverPic;
   final String callId;
   final bool hasDialed;
+  final bool hasVideo;
 
   Call({
     required this.callerId,
@@ -19,6 +20,7 @@ class Call {
     required this.receiverPic,
     required this.callId,
     required this.hasDialed,
+    required this.hasVideo,
   });
 
   Map<String, dynamic> toMap() {
@@ -31,6 +33,7 @@ class Call {
       'receiverPic': receiverPic,
       'callId': callId,
       'hasDialed': hasDialed,
+      'hasVideo': hasVideo,
     };
   }
 
@@ -43,7 +46,8 @@ class Call {
       receiverName: map['receiverName'] as String,
       receiverPic: map['receiverPic'] as String,
       callId: map['callId'] as String,
-      hasDialed: map['hasDialed'] as bool,
+      hasDialed: map['hasDialed'] as bool? ?? false,
+      hasVideo: map['hasVideo'] as bool? ?? true, // Fallback to true if missing in old records
     );
   }
 }
