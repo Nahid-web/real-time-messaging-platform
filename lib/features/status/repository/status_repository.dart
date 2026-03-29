@@ -48,8 +48,11 @@ class StatusRepository {
             statusImage,
           );
       List<Contact> contacts = [];
-      if (!kIsWeb && await FlutterContacts.requestPermission()) {
-        contacts = await FlutterContacts.getContacts(withProperties: true);
+      if (!kIsWeb) {
+        final status = await FlutterContacts.permissions.request(PermissionType.read);
+        if (status == PermissionStatus.granted) {
+          contacts = await FlutterContacts.getAll(properties: ContactProperties.allProperties);
+        }
       }
 
       List<String> uidWhoCanSee = [];
@@ -155,8 +158,8 @@ class StatusRepository {
         }
       } else {
         List<Contact> contacts = [];
-        if (await FlutterContacts.requestPermission()) {
-          contacts = await FlutterContacts.getContacts(withProperties: true);
+        if (await FlutterContacts.permissions.request(PermissionType.read) == PermissionStatus.granted) {
+          contacts = await FlutterContacts.getAll(properties: ContactProperties.allProperties);
         }
 
         for (var i = 0; i < contacts.length; i++) {
