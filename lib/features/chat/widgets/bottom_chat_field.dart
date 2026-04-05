@@ -41,16 +41,22 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
   void initState() {
     super.initState();
     _soundRecorder = FlutterSoundRecorder();
-    openAudio();
+    // Do NOT open audio here — request mic permission only when needed
   }
 
-  void openAudio() async {
+  Future<bool> _ensureAudioReady() async {
+    if (isRecorderInit) return true;
     final status = await Permission.microphone.request();
     if (status != PermissionStatus.granted) {
-      throw RecordingPermissionException('Mic permission not allowed');
+      showSnackBar(
+        context: context,
+        content: 'Microphone permission is required to record audio.',
+      );
+      return false;
     }
     await _soundRecorder!.openRecorder();
     isRecorderInit = true;
+    return true;
   }
 
   void sendTextMessage() async {
@@ -66,12 +72,12 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
         _messageController.text = '';
       });
     } else {
+      final ready = await _ensureAudioReady();
+      if (!ready) return;
+
       var tempDir = await getTemporaryDirectory();
       var path = '${tempDir.path}/flutter_sound.wav';
 
-      if (!isRecorderInit) {
-        return;
-      }
       if (isRecording) {
         await _soundRecorder!.stopRecorder();
         sendFileMessage(File(path), MessageEnum.audio);
@@ -172,7 +178,9 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
     return Column(
       children: [
         isShowMessageReply ? const MessageReplyPreview() : const SizedBox(),
-        Row(
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
+          child: Row(
           children: [
             Expanded(
               child: TextFormField(
@@ -269,6 +277,7 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
               ),
             )
           ],
+          ),
         ),
         isShowEmojiContainer
             ? SizedBox(

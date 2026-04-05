@@ -65,14 +65,15 @@ class _CallScreenState extends ConsumerState<CallScreen> {
   }
 
   Future<void> _setupAgora() async {
-    // Skip on web — Agora video SDK does not have full web support
-    if (kIsWeb) return;
-
-    // IMPORTANT: Request permissions before initializing Agora
-    await [Permission.microphone, Permission.camera].request();
+    // Request permissions on mobile only (browser handles this on web)
+    if (!kIsWeb) {
+      await [Permission.microphone, Permission.camera].request();
+    }
 
     final appId = dotenv.env['agoraAppId'] ?? '';
     if (appId.isEmpty) return;
+
+    try {
 
     _engine = createAgoraRtcEngine();
     await _engine!.initialize(RtcEngineContext(appId: appId));
@@ -106,7 +107,9 @@ class _CallScreenState extends ConsumerState<CallScreen> {
       await _engine!.startPreview();
     }
     await _engine!.enableAudio();
-    await _engine!.setEnableSpeakerphone(_isSpeakerOn);
+    if (!kIsWeb) {
+      await _engine!.setEnableSpeakerphone(_isSpeakerOn);
+    }
 
     // Fetch token from backend server (falls back to empty = testing mode)
     final token = await _fetchToken();
@@ -120,11 +123,18 @@ class _CallScreenState extends ConsumerState<CallScreen> {
         clientRoleType: ClientRoleType.clientRoleBroadcaster,
       ),
     );
+    } catch (e) {
+      debugPrint('[Agora Setup Error] $e');
+    }
   }
 
   Future<void> _endCall() async {
-    await _engine?.leaveChannel();
-    await _engine?.release();
+    try {
+      await _engine?.leaveChannel();
+      await _engine?.release();
+    } catch (e) {
+      debugPrint('[Agora End Call Error] $e');
+    }
     if (mounted) {
       ref.read(callControllerProvider).endCall(
             widget.call.callerId,
@@ -137,21 +147,15 @@ class _CallScreenState extends ConsumerState<CallScreen> {
 
   @override
   void dispose() {
-    _engine?.leaveChannel();
-    _engine?.release();
+    try {
+      _engine?.leaveChannel();
+      _engine?.release();
+    } catch (_) {}
     super.dispose();
   }
 
   Widget _remoteVideo() {
-    if (kIsWeb) {
-      return const Center(
-        child: Text(
-          'Video calls are not supported on web.',
-          style: TextStyle(color: Colors.white70, fontSize: 16),
-        ),
-      );
-    }
-    if (_remoteUid != null && widget.call.hasVideo) {
+    if (_remoteUid != null && widget.call.hasVideo && _engine != null) {
       return AgoraVideoView(
         controller: VideoViewController.remote(
           rtcEngine: _engine!,
@@ -201,7 +205,7 @@ class _CallScreenState extends ConsumerState<CallScreen> {
             Positioned.fill(child: _remoteVideo()),
 
             // Local video (Picture-in-Picture top-right)
-            if (!kIsWeb && _isJoined && !_isCameraOff)
+            if (_isJoined && !_isCameraOff)
               Positioned(
                 top: 16,
                 right: 16,
@@ -259,7 +263,7 @@ class _CallScreenState extends ConsumerState<CallScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   // Switch Camera (only for video calls)
-                  if (widget.call.hasVideo)
+                  if (widget.call.hasVideo && !kIsWeb)
                     _ControlButton(
                       icon: Icons.switch_camera,
                       color: _isCameraOff ? Colors.white38 : Colors.white,
@@ -271,17 +275,18 @@ class _CallScreenState extends ConsumerState<CallScreen> {
                       },
                     ),
 
-                  // Speaker Toggle
-                  _ControlButton(
-                    icon: _isSpeakerOn ? Icons.volume_up : Icons.volume_down,
-                    color: Colors.white,
-                    background:
-                        _isSpeakerOn ? Colors.blue.shade400 : Colors.white24,
-                    onTap: () async {
-                      setState(() => _isSpeakerOn = !_isSpeakerOn);
-                      await _engine?.setEnableSpeakerphone(_isSpeakerOn);
-                    },
-                  ),
+                  // Speaker Toggle (mobile only)
+                  if (!kIsWeb)
+                    _ControlButton(
+                      icon: _isSpeakerOn ? Icons.volume_up : Icons.volume_down,
+                      color: Colors.white,
+                      background:
+                          _isSpeakerOn ? Colors.blue.shade400 : Colors.white24,
+                      onTap: () async {
+                        setState(() => _isSpeakerOn = !_isSpeakerOn);
+                        await _engine?.setEnableSpeakerphone(_isSpeakerOn);
+                      },
+                    ),
 
                   // End call
                   _ControlButton(
