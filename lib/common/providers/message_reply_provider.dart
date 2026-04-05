@@ -10,4 +10,13 @@ class MessageReply {
       {required this.message, required this.isMe, required this.messageEnum});
 }
 
-final messageReplyProvider = StateProvider<MessageReply?>((ref) => null);
+class MessageReplyNotifier extends Notifier<MessageReply?> {
+  @override
+  MessageReply? build() => null;
+
+  void set(MessageReply? value) => state = value;
+}
+
+final messageReplyProvider = NotifierProvider<MessageReplyNotifier, MessageReply?>(
+  MessageReplyNotifier.new,
+);

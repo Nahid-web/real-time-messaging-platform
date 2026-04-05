@@ -1,13 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:real_time_messaging_platform/common/utils/colors.dart';
-import 'package:real_time_messaging_platform/features/chat/widgets/chat_list.dart';
 import 'package:real_time_messaging_platform/features/chat/widgets/contacts_list.dart';
-import 'package:real_time_messaging_platform/widgets/web_chat_appbar.dart';
+import 'package:real_time_messaging_platform/features/status/screens/status_contacts_screen.dart';
 import 'package:real_time_messaging_platform/widgets/web_profile_bar.dart';
 import 'package:real_time_messaging_platform/widgets/web_search_bar.dart';
 
-class WebLayoutScreen extends StatelessWidget {
+class WebLayoutScreen extends StatefulWidget {
   const WebLayoutScreen({super.key});
+
+  @override
+  State<WebLayoutScreen> createState() => _WebLayoutScreenState();
+}
+
+class _WebLayoutScreenState extends State<WebLayoutScreen>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,18 +34,43 @@ class WebLayoutScreen extends StatelessWidget {
       body: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Left contacts panel — fixed 360px width
+          // Left panel — fixed 360px width
           SizedBox(
             width: 360,
             child: Column(
-              children: const [
-                WebProfileBar(),
-                WebSearchBar(),
-                Expanded(child: ContactsList()),
+              children: [
+                const WebProfileBar(),
+                const WebSearchBar(),
+                TabBar(
+                  controller: _tabController,
+                  indicatorColor: tabColor,
+                  indicatorWeight: 3,
+                  labelColor: tabColor,
+                  unselectedLabelColor: Colors.grey,
+                  labelStyle: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 12,
+                  ),
+                  tabs: const [
+                    Tab(text: 'Messages'),
+                    Tab(text: 'Stories'),
+                    Tab(text: 'Calls'),
+                  ],
+                ),
+                Expanded(
+                  child: TabBarView(
+                    controller: _tabController,
+                    children: const [
+                      ContactsList(),
+                      StatusContactsScreen(),
+                      _WebCallsTab(),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
-          // Right chat panel — fills remaining space
+          // Right panel — empty state (chat opens as a full route)
           Expanded(
             child: Container(
               decoration: const BoxDecoration(
@@ -34,84 +78,64 @@ class WebLayoutScreen extends StatelessWidget {
                   left: BorderSide(color: dividerColor),
                 ),
                 image: DecorationImage(
-                  image: AssetImage(
-                    "assets/backgroundImage.png",
-                  ),
+                  image: AssetImage('assets/backgroundImage.png'),
                   fit: BoxFit.cover,
                 ),
               ),
-              child: Column(
-                children: [
-                  const ChatAppBar(),
-                  const SizedBox(height: 20),
-                  const Expanded(
-                    child: ChatList(
-                      receiverUserId: '',
-                      isGroupChat: false,
+              child: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.chat_bubble_outline_rounded,
+                      size: 80,
+                      color: Colors.white24,
                     ),
-                  ),
-                  Container(
-                    height: MediaQuery.of(context).size.height * 0.07,
-                    padding: const EdgeInsets.all(10),
-                    decoration: const BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(color: dividerColor),
+                    const SizedBox(height: 20),
+                    const Text(
+                      'Select a conversation',
+                      style: TextStyle(
+                        color: Colors.white54,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
                       ),
-                      color: chatBarMessage,
                     ),
-                    child: Row(
-                      children: [
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.emoji_emotions_outlined,
-                            color: Colors.grey,
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.attach_file,
-                            color: Colors.grey,
-                          ),
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                              left: 10,
-                              right: 15,
-                            ),
-                            child: TextField(
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: searchBarColor,
-                                hintText: 'Type a message',
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    width: 0,
-                                    style: BorderStyle.none,
-                                  ),
-                                ),
-                                contentPadding:
-                                    const EdgeInsets.only(left: 20),
-                              ),
-                            ),
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.mic,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ],
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Choose a contact from the left to start chatting.',
+                      style: TextStyle(color: Colors.white38, fontSize: 13),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _WebCallsTab extends StatelessWidget {
+  const _WebCallsTab();
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: const [
+          Icon(Icons.call_outlined, size: 64, color: Colors.grey),
+          SizedBox(height: 16),
+          Text(
+            'No recent calls',
+            style: TextStyle(color: Colors.grey, fontSize: 15),
+          ),
+          SizedBox(height: 8),
+          Text(
+            'Start a call from a chat by tapping\nthe call or video icon.',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.grey, fontSize: 13),
           ),
         ],
       ),

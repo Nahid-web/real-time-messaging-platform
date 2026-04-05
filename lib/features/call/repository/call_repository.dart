@@ -30,6 +30,8 @@ class CallRepository {
     BuildContext context,
     Call receiverCallData,
   ) async {
+    // Capture navigator BEFORE any async gaps so context isn't stale
+    final navigator = Navigator.of(context);
     try {
       await firestore.collection('call').doc(senderCallData.callerId).set(
             senderCallData.toMap(),
@@ -37,8 +39,7 @@ class CallRepository {
       await firestore.collection('call').doc(senderCallData.receiverId).set(
             receiverCallData.toMap(),
           );
-      Navigator.push(
-        context,
+      navigator.push(
         MaterialPageRoute(
           builder: (context) => CallScreen(
             call: senderCallData,

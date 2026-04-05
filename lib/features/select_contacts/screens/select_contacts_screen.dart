@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_contacts/contact.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:real_time_messaging_platform/common/widgets/error.dart';
 import 'package:real_time_messaging_platform/common/widgets/loader.dart';
@@ -41,15 +41,15 @@ class SelectContactsScreen extends ConsumerWidget {
                   onTap: () => selectContact(ref, contact, context),
                   child: ListTile(
                     title: Text(
-                      contact.displayName,
+                      contact.displayName ?? 'Unknown',
                       style: const TextStyle(
                         fontSize: 18,
                       ),
                     ),
-                    leading: contact.photo == null
+                    leading: contact.photo == null || contact.photo!.thumbnail == null
                         ? null
                         : CircleAvatar(
-                            backgroundImage: MemoryImage(contact.photo!),
+                            backgroundImage: MemoryImage(contact.photo!.thumbnail!),
                             radius: 30,
                           ),
                   ),

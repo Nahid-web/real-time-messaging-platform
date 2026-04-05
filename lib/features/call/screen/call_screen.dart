@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
+import 'package:permission_handler/permission_handler.dart';
 import 'package:real_time_messaging_platform/features/call/controller/call_controller.dart';
 import 'package:real_time_messaging_platform/models/call.dart';
 
@@ -34,10 +35,13 @@ class _CallScreenState extends ConsumerState<CallScreen> {
   int? _remoteUid;
   bool _isMuted = false;
   bool _isCameraOff = false;
+  bool _isSpeakerOn = true;
 
   @override
   void initState() {
     super.initState();
+    _isCameraOff = !widget.call.hasVideo;
+    _isSpeakerOn = widget.call.hasVideo; // Speaker for video, Earpiece for audio
     _setupAgora();
   }
 
@@ -61,17 +65,24 @@ class _CallScreenState extends ConsumerState<CallScreen> {
   }
 
   Future<void> _setupAgora() async {
-    // Skip on web — Agora video SDK does not have full web support
-    if (kIsWeb) return;
+    // Request permissions on mobile only (browser handles this on web)
+    if (!kIsWeb) {
+      await [Permission.microphone, Permission.camera].request();
+    }
 
     final appId = dotenv.env['agoraAppId'] ?? '';
     if (appId.isEmpty) return;
+
+    try {
 
     _engine = createAgoraRtcEngine();
     await _engine!.initialize(RtcEngineContext(appId: appId));
 
     _engine!.registerEventHandler(
       RtcEngineEventHandler(
+        onError: (err, msg) {
+          debugPrint('[Agora Error] Code: $err, Message: $msg');
+        },
         onJoinChannelSuccess: (connection, elapsed) {
           setState(() => _isJoined = true);
         },
@@ -91,9 +102,14 @@ class _CallScreenState extends ConsumerState<CallScreen> {
       ),
     );
 
-    await _engine!.enableVideo();
+    if (widget.call.hasVideo) {
+      await _engine!.enableVideo();
+      await _engine!.startPreview();
+    }
     await _engine!.enableAudio();
-    await _engine!.startPreview();
+    if (!kIsWeb) {
+      await _engine!.setEnableSpeakerphone(_isSpeakerOn);
+    }
 
     // Fetch token from backend server (falls back to empty = testing mode)
     final token = await _fetchToken();
@@ -107,11 +123,18 @@ class _CallScreenState extends ConsumerState<CallScreen> {
         clientRoleType: ClientRoleType.clientRoleBroadcaster,
       ),
     );
+    } catch (e) {
+      debugPrint('[Agora Setup Error] $e');
+    }
   }
 
   Future<void> _endCall() async {
-    await _engine?.leaveChannel();
-    await _engine?.release();
+    try {
+      await _engine?.leaveChannel();
+      await _engine?.release();
+    } catch (e) {
+      debugPrint('[Agora End Call Error] $e');
+    }
     if (mounted) {
       ref.read(callControllerProvider).endCall(
             widget.call.callerId,
@@ -124,21 +147,15 @@ class _CallScreenState extends ConsumerState<CallScreen> {
 
   @override
   void dispose() {
-    _engine?.leaveChannel();
-    _engine?.release();
+    try {
+      _engine?.leaveChannel();
+      _engine?.release();
+    } catch (_) {}
     super.dispose();
   }
 
   Widget _remoteVideo() {
-    if (kIsWeb) {
-      return const Center(
-        child: Text(
-          'Video calls are not supported on web.',
-          style: TextStyle(color: Colors.white70, fontSize: 16),
-        ),
-      );
-    }
-    if (_remoteUid != null) {
+    if (_remoteUid != null && widget.call.hasVideo && _engine != null) {
       return AgoraVideoView(
         controller: VideoViewController.remote(
           rtcEngine: _engine!,
@@ -167,9 +184,9 @@ class _CallScreenState extends ConsumerState<CallScreen> {
               ),
             ),
             const SizedBox(height: 8),
-            const Text(
-              'Calling...',
-              style: TextStyle(color: Colors.white54, fontSize: 16),
+            Text(
+              _remoteUid != null ? 'Connected' : 'Calling...',
+              style: const TextStyle(color: Colors.white54, fontSize: 16),
             ),
           ],
         ),
@@ -188,7 +205,7 @@ class _CallScreenState extends ConsumerState<CallScreen> {
             Positioned.fill(child: _remoteVideo()),
 
             // Local video (Picture-in-Picture top-right)
-            if (!kIsWeb && _isJoined && !_isCameraOff)
+            if (_isJoined && !_isCameraOff)
               Positioned(
                 top: 16,
                 right: 16,
@@ -245,17 +262,31 @@ class _CallScreenState extends ConsumerState<CallScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  // Mute mic
-                  _ControlButton(
-                    icon: _isMuted ? Icons.mic_off : Icons.mic,
-                    color: _isMuted ? Colors.white : Colors.white,
-                    background:
-                        _isMuted ? Colors.red.shade400 : Colors.white24,
-                    onTap: () async {
-                      setState(() => _isMuted = !_isMuted);
-                      await _engine?.muteLocalAudioStream(_isMuted);
-                    },
-                  ),
+                  // Switch Camera (only for video calls)
+                  if (widget.call.hasVideo && !kIsWeb)
+                    _ControlButton(
+                      icon: Icons.switch_camera,
+                      color: _isCameraOff ? Colors.white38 : Colors.white,
+                      background: Colors.white24,
+                      onTap: () async {
+                        if (!_isCameraOff) {
+                          await _engine?.switchCamera();
+                        }
+                      },
+                    ),
+
+                  // Speaker Toggle (mobile only)
+                  if (!kIsWeb)
+                    _ControlButton(
+                      icon: _isSpeakerOn ? Icons.volume_up : Icons.volume_down,
+                      color: Colors.white,
+                      background:
+                          _isSpeakerOn ? Colors.blue.shade400 : Colors.white24,
+                      onTap: () async {
+                        setState(() => _isSpeakerOn = !_isSpeakerOn);
+                        await _engine?.setEnableSpeakerphone(_isSpeakerOn);
+                      },
+                    ),
 
                   // End call
                   _ControlButton(
@@ -266,19 +297,32 @@ class _CallScreenState extends ConsumerState<CallScreen> {
                     onTap: _endCall,
                   ),
 
-                  // Camera toggle
+                  // Mute mic
                   _ControlButton(
-                    icon: _isCameraOff
-                        ? Icons.videocam_off
-                        : Icons.videocam,
+                    icon: _isMuted ? Icons.mic_off : Icons.mic,
                     color: Colors.white,
                     background:
-                        _isCameraOff ? Colors.red.shade400 : Colors.white24,
+                        _isMuted ? Colors.red.shade400 : Colors.white24,
                     onTap: () async {
-                      setState(() => _isCameraOff = !_isCameraOff);
-                      await _engine?.muteLocalVideoStream(_isCameraOff);
+                      setState(() => _isMuted = !_isMuted);
+                      await _engine?.muteLocalAudioStream(_isMuted);
                     },
                   ),
+
+                  // Camera toggle
+                  if (widget.call.hasVideo)
+                    _ControlButton(
+                      icon: _isCameraOff
+                          ? Icons.videocam_off
+                          : Icons.videocam,
+                      color: Colors.white,
+                      background:
+                          _isCameraOff ? Colors.red.shade400 : Colors.white24,
+                      onTap: () async {
+                        setState(() => _isCameraOff = !_isCameraOff);
+                        await _engine?.muteLocalVideoStream(_isCameraOff);
+                      },
+                    ),
                 ],
               ),
             ),
